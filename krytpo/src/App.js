@@ -15,20 +15,20 @@ const CryptoTracker = () => {
 
   const [selectedCrypto, setSelectedCrypto] = useState(null);
   const [searchText, setSearchText] = useState('');
-  const [selectedInterval] = useState('day'); // Default interval: day
+  const [selectedInterval] = useState('day'); 
 
   const chartRef = useRef(null);
 
   const fetchHistoricalData = useCallback(async (cryptoName, interval) => {
     const response = await axios.get(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${cryptoName}&tsym=USD&limit=7&aggregate=1`);
-    return response.data.Data.Data; // Return historical data array
+    return response.data.Data.Data; 
   }, []);
 
   const renderChart = useCallback(async (cryptoName) => {
     const historicalData = await fetchHistoricalData(cryptoName, selectedInterval);
     const cryptoChartCanvas = chartRef.current;
     
-    // Destroy previous chart
+    
     if (cryptoChartCanvas.chart) {
       cryptoChartCanvas.chart.destroy();
     }
@@ -38,10 +38,10 @@ const CryptoTracker = () => {
     const cryptoChart = new Chart(cryptoChartCanvas, {
       type: 'line',
       data: {
-        labels: historicalData.map(dataPoint => new Date(dataPoint.time * 1000).toLocaleDateString()), // Convert timestamps to date strings
+        labels: historicalData.map(dataPoint => new Date(dataPoint.time * 1000).toLocaleDateString()),
         datasets: [{
           label: `${cryptoName.charAt(0).toUpperCase() + cryptoName.slice(1)} Price (USD)`,
-          data: historicalData.map(dataPoint => dataPoint.close), // Extract closing prices
+          data: historicalData.map(dataPoint => dataPoint.close), 
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
           tension: 0.1
@@ -49,7 +49,7 @@ const CryptoTracker = () => {
       },
     });
 
-    cryptoChartCanvas.chart = cryptoChart; // Store the chart instance on the canvas element
+    cryptoChartCanvas.chart = cryptoChart; 
   }, [fetchHistoricalData, selectedInterval]);
 
   useEffect(() => {
